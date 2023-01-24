@@ -1,0 +1,167 @@
+/* || General setup */
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 10px;
+    background-color: #252422;
+}
+
+body {
+    width: 70%;
+    margin: 0 auto;
+}
+
+/* || typography */
+
+h1, h2, h3 {
+    font-family: "Montserrat Medium", sans-serif;
+    color: #FFFCF2;
+}
+
+p, input, li {
+    font-family: 'Open Sans', sans-serif;
+    color: #FFFCF2;
+}
+
+h1 {
+    font-size: 4rem;
+    text-align: center;
+    color: #EB5E28;
+    text-shadow: 2px 2px 5px black;
+}
+
+h2 {
+    font-size: 3rem;
+    color: #EB5E28;
+    text-align: center;
+    text-shadow: 1px 1px 5px black;
+}
+
+h3 {
+    font-size: 2.2rem;
+}
+
+p, li {
+    font-size: 1.6rem;
+    line-height: 1.5;
+}
+
+/* || header layout */
+
+nav, article, aside, footer {
+    background-color: #56524D;
+    padding: 1%;
+}
+
+nav {
+    height: 50px;
+    background-color: #403D39;
+    display: flex;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+nav ul {
+    padding: 0;
+    list-style-type: none;
+    flex: 2;
+    display: flex;
+}
+
+nav li {
+    display: inline;
+    text-align: center;
+    flex: 1;
+}
+
+nav a {
+    display: inline-block;
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #FFFCF2;
+}
+
+nav form {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 2em;
+}
+
+input {
+    font-size: 1.6rem;
+    height: 32px;
+}
+
+input[type="search"] {
+    flex: 3;
+}
+
+input[type="submit"] {
+    flex: 1;
+    margin-left: 1rem;
+    background: #CCC5B9;
+    border: 0;
+    color: #252422;
+}
+
+/* || main layout */
+
+main {
+    display: flex;
+}
+
+article {
+    flex: 4;
+}
+
+aside {
+    flex: 1;
+    margin-left: 10px;
+    background-color: #403D39;
+}
+
+aside li {
+    padding-bottom: 10px;
+}
+
+footer {
+    margin-top: 10px;
+}
+
+.hidden-href:link {
+    text-decoration: none;
+    color: #FFFCF2;
+}
+
+.hidden-href:hover {
+    text-decoration: underline;
+    color: #FFFCF2;
+}
+
+.hidden-href:visited {
+    color: #FFFCF2;
+}
+
+.colored-href:link {
+    color: #EB5E28;
+}
+
+.colored-href:hover {
+    color: #EB5E28;
+    text-underline: #EB5E28 thick;
+}
+
+.colored-href:visited {
+    color: #EB5E28;
+}
+
+#ekalia-title {
+    color: #C80632;
+}
