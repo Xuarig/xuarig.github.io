@@ -375,7 +375,7 @@ function isDay(date, sunrise, sunset) {
 
 // This function is used to get a random user
 function fetchUser() {
-    const data = fetch("https://randomuser.me/api/?results=1" + (SETTINGS.autogenOnlyFrance ? "&nat=fr" : ""));
+    const data = fetch("https://randomuser.me/api/?results=1" + (SETTINGS.autogenOnlyFrance ? "&nat=fr" : ""), {mode: 'cors'});
 
     return data.then(response => response.json()).catch(error => console.log(error));
 }
