@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="notranslate" lang="en" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta content="notranslate" name="google">
+    <title>Météo de France</title>
+
+    <!-- Leaflet -->
+    <link crossorigin="" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+          integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+          rel="stylesheet"/>
+    <script crossorigin=""
+            integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+            src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+    <!-- Weather Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css"
+          rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons-wind.min.css"
+          rel="stylesheet"/>
+
+    <!-- CSS -->
+    <link href="syle.css" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+    <!-- Open Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap"
+          rel="stylesheet"/>
+
+    <!-- Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JS -->
+    <script src="js/utils.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/meteo.js"></script>
+    <script src="js/search.js"></script>
+</head>
+<body>
+
+<div id="map">
+</div>
+<div id="info">
+    <div id="info-toolbar">
+        <div class="info-toolbar unselectable" id="info-toolbar-left">
+            <span class="material-symbols-outlined unselectable info-button" id="info-x">close</span>
+            <span class="material-symbols-outlined unselectable info-button" id="info-reload">refresh</span>
+        </div>
+
+        <h5 id="info-last-update"></h5>
+
+        <div class="info-toolbar unselectable" id="info-toolbar-right">
+            <span class="material-symbols-outlined unselectable info-button" id="info-location">location_on</span>
+            <span class="material-symbols-outlined unselectable info-button" id="info-delete">delete</span>
+        </div>
+    </div>
+
+    <div id="loader-info">
+        <img class="loader" id="loader-info-icon" src="icons/loader.svg">
+        <h1 id="loader-info-tip">Chargement...</h1>
+    </div>
+
+    <div id="all-info">
+        <div id="info-city">
+            <h1 id="city-name"></h1>
+            <h2 id="city-country"></h2>
+        </div>
+
+        <div class="info-box" id="info-user">
+            <img class="avatar" id="user-avatar">
+            <div id="user-infolist">
+                <p class="text-info user-info" id="user-name"></p>
+                <p class="text-info user-info" id="user-age"></p>
+            </div>
+        </div>
+
+        <h1 id="meteo-title">Météo</h1>
+
+        <div class="info-box" id="info-meteo">
+            <div id="meteo-type">
+                <div id="meteo-icon"></div>
+                <p class="text-info meteo-info" id="meteo-type-text"></p>
+            </div>
+
+            <div id="meteo-infolist">
+                <p class="text-info meteo-info" id="meteo-time"></p>
+                <div id="meteo-suntime">
+                    <p class="text-info meteo-info" id="meteo-sunrise"></p>
+                    <p class="text-info meteo-info" id="meteo-sunset"></p>
+                </div>
+                <p class="text-info meteo-info" id="meteo-temperature"></p>
+                <p class="text-info meteo-info" id="meteo-apparent-temperature"></p>
+                <p class="text-info meteo-info" id="meteo-precipitation"></p>
+                <p class="text-info meteo-info" id="meteo-clouds"></p>
+                <p class="text-info meteo-info" id="meteo-wind"></p>
+                <p class="text-info meteo-info" id="meteo-humidity"></p>
+                <p class="text-info meteo-info" id="meteo-pressure"></p>
+                <p class="text-info meteo-info" id="meteo-visibility"></p>
+
+                <div id="meteo-chart">
+                    <canvas class="info-chart" id="meteo-chart-temp-canvas"></canvas>
+                    <canvas class="info-chart" id="meteo-chart-rain-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Parameters: Auto Generates / Only in France / Graphs / Advanced mode / API Key -->
+<!-- Add a research bar for cities? -->
+
+<div class="popup-background">
+    <div class="popup" id="settings-popup">
+        <h1>Paramètres</h1>
+        <span class="material-symbols-outlined unselectable info-button" id="settings-x">close</span>
+        <span class="material-symbols-outlined unselectable info-button" id="settings-reset">refresh</span>
+        <div class="setting-box" id="auto-generation-option-box">
+            <div class="setting-box-title">
+                <h2>Génération automatique d'utilisateurs</h2>
+            </div>
+            <div class="setting-box-content">
+                <div class="setting-box-content-item">
+                    <input class="2state-check-box" id="auto-generation-option" type="checkbox">
+                    <label for="auto-generation-option">Génération automatique</label>
+                </div>
+                <!--Keep loaded current user-->
+                <div class="setting-box-content-item">
+                    <input class="2state-check-box" id="auto-generation-option-keep" type="checkbox">
+                    <label for="auto-generation-option-keep">Garder l'utilisateur actuel chargé</label>
+                </div>
+                <!--Only in France-->
+                <div class="setting-box-content-item">
+                    <input class="2state-check-box" id="auto-generation-option-france" type="checkbox">
+                    <label for="auto-generation-option-france">Seulement en France</label>
+                </div>
+                <div class="setting-box-content-item" id="setting-box-auto-generation-option-number">
+                    <label for="auto-generation-option-number">Nombre d'utilisateurs max</label>
+                    <input id="auto-generation-option-number" max="200" min="1" type="number" value="10">
+                </div>
+                <!--Autogen interval-->
+                <div class="setting-box-content-item" id="setting-box-auto-generation-option-interval">
+                    <label for="auto-generation-option-interval" id="auto-generation-option-interval-value">Intervalle
+                        de génération (1 seconde)</label>
+                    <input id="auto-generation-option-interval" max="5" min="0.1" step="0.1"
+                           type="range"
+                           value="1">
+                </div>
+            </div>
+        </div>
+        <div class="setting-box" id="graphs-option-box">
+            <div class="setting-box-title">
+                <h2>Graphiques</h2>
+            </div>
+            <div class="setting-box-content">
+                <div class="setting-box-content-item">
+                    <input class="2state-check-box" id="graphs-option-temp" type="checkbox">
+                    <label for="graphs-option-temp">Températures</label>
+                </div>
+                <div class="setting-box-content-item">
+                    <input class="2state-check-box" id="graphs-option-rain" type="checkbox">
+                    <label for="graphs-option-rain">Précipitations</label>
+                </div>
+            </div>
+        </div>
+        <div class="setting-box" id="advanced-mode-option-box">
+            <div class="setting-box-title">
+                <h2>Mode avancé</h2>
+            </div>
+            <div class="setting-box-content">
+                <div class="setting-box-content-item">
+                    <input class="2state-check-box" id="detailled-infos-option" type="checkbox">
+                    <label for="detailled-infos-option">Plus de détails</label>
+                </div>
+                <div class="setting-box-content-item">
+                    <input class="2state-check-box" id="more-tools-option" type="checkbox">
+                    <label for="more-tools-option">Plus d'outils</label>
+                </div>
+                <!--Dev mode-->
+                <div class="setting-box-content-item">
+                    <input class="2state-check-box" id="dev-mode-option" type="checkbox">
+                    <label for="dev-mode-option">Mode développeur</label>
+                </div>
+            </div>
+        </div>
+        <div class="setting-box" id="api-key-option-box">
+            <div class="setting-box-title">
+                <h2>Clés d'API</h2>
+            </div>
+            <div class="setting-box-content" id="setting-box-content-api-key">
+                <div class="setting-box-content-item text-input-content-box">
+                    <label for="api-key-option-timezone"><a class="setting-link" href="https://timezonedb.com/"
+                                                            target="_blank">
+                        Timezone DB</a> (Heure & localisation plus précise)</label>
+                    <input class="text-input" id="api-key-option-timezone" type="text">
+                </div>
+                <div class="setting-box-content-item text-input-content-box">
+                    <label for="api-key-option-google"><a
+                            class="setting-link"
+                            href="https://developers.google.com/maps/documentation/places/web-service/overview"
+                            target="_blank">Google
+                        Places API</a> (Recherche de villes)</label>
+                    <input class="text-input" id="api-key-option-google" type="text">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup-background">
+    <div class="popup" id="search-popup">
+          <div class="search-text">
+              <span class="material-symbols-outlined search-icon" id="search-icon">search</span>
+              <input type="text" id="search-imput" maxlength="48">
+              <span class="material-symbols-outlined search-icon" id="search-close">close</span>
+          </div>
+          <div id="search-results-list">
+          </div>
+    </div>
+</div>
+
+<div class="unselectable" id="info-overlay">
+    <div class="info-overlay" id="upper-info-overlay">
+    </div>
+
+    <div class="info-overlay" id="lower-info-overlay">
+        <div id="button-settings">
+            <span class="material-symbols-outlined map-button upper-map-button" title="Paramètres (Tab)">settings</span>
+        </div>
+        <div id="button-add-user">
+            <span class="material-symbols-outlined map-button more-tools" title="Ajouter une personne aléatoire (P)">person_add</span>
+        </div>
+        <div id="button-clear-user">
+            <span class="material-symbols-outlined map-button more-tools"
+                  title="Supprimer toutes les personnes (R)">delete</span>
+        </div>
+        <div id="button-pinmode">
+            <span class="material-symbols-outlined map-button more-tools" id="button-pinmode-icon"
+                  title="Récupérer la météo d'un endroit (M)">add_location</span>
+        </div>
+        <div id="button-search">
+            <span class="material-symbols-outlined map-button more-tools"
+                  title="Rechercher une ville (Ctrl+Espace)">search</span>
+        </div>
+        <div id="button-reset-view">
+            <span class="material-symbols-outlined map-button lower-map-button"
+                  title="Recentrer la carte (C)">filter_center_focus</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
